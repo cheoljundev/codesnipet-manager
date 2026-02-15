@@ -1,1 +1,76 @@
 @import "tailwindcss";
+
+@theme {
+    /* 고정폭 폰트 설정 (JetBrains Mono 권장) */
+    --font-mono: "JetBrains Mono", "Fira Code", ui-monospace, monospace;
+}
+
+@layer base {
+    :root {
+        --editor-padding: 20px;
+        --editor-line-height: 1.5rem; /* 약 24px 고정 */
+        --editor-font-size: 14px;
+    }
+
+    /* 전역 스크롤바 숨기기 (레이아웃 틀어짐 방지) */
+    ::-webkit-scrollbar {
+        display: none;
+    }
+}
+
+/* 1. 두 레이어 공통 스타일 (절대 어긋나면 안 되는 속성들) */
+.editor-layer {
+    font-family: var(--font-mono) !important;
+    font-size: var(--editor-font-size) !important;
+    line-height: var(--editor-line-height) !important;
+    padding: var(--editor-padding) !important;
+
+    margin: 0 !important;
+    border: none !important;
+    tab-size: 2 !important;
+
+    /* 텍스트 줄바꿈 설정 동기화 */
+    white-space: pre-wrap !important;
+    word-wrap: break-word !important;
+    overflow-wrap: break-word !important;
+
+    /* 폰트 렌더링 고정 (커서 밀림 방지의 핵심) */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    letter-spacing: normal !important;
+}
+
+/* 2. 입력 레이어 (Textarea) */
+#editor {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: transparent !important;
+    color: transparent !important; /* 글자는 숨기고 */
+    caret-color: #38bdf8 !important; /* 커서(sky-400)만 보이게 */
+    outline: none !important;
+    resize: none;
+    z-index: 20;
+}
+
+/* 3. 시각화 레이어 (Prism) */
+#highlighting {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: transparent !important;
+    z-index: 10;
+    pointer-events: none; /* 클릭 이벤트가 textarea로 가도록 설정 */
+}
+
+/* Prism 코드 내부에 불필요한 마진 제거 */
+#highlighting code {
+    font-family: inherit !important;
+    padding: 0 !important;
+    background: transparent !important;
+}
